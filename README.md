@@ -3,7 +3,37 @@
 Sistem reimbursement perusahaan dengan dashboard, empat data master, frontend HTML/CSS/JavaScript, backend Node.js bawaan, dan database Supabase Postgres. Tidak membutuhkan `package.json`, framework, CDN, atau berkas environment.
 
 ## Struktur
+<!-- ================= IDENTITAS MAHASISWA ================= -->
+<section class="identity-card" aria-label="Identitas Mahasiswa">
+  <div class="identity-badge">
+    <span class="identity-dot"></span>
+    Tugas Proyek — KlaimKu
+  </div>
 
+  <h1 class="identity-name">SULISTIANI</h1>
+  <p class="identity-nim">NIM: 12030124120066</p>
+
+  <div class="identity-grid">
+    <div class="identity-item">
+      <span class="identity-label">Mata Kuliah</span>
+      <span class="identity-value">Pengkodean dan Pemrograman</span>
+    </div>
+    <div class="identity-item">
+      <span class="identity-label">Kelas</span>
+      <span class="identity-value">D</span>
+    </div>
+    <div class="identity-item identity-item-wide">
+      <span class="identity-label">Dosen Pengampu</span>
+      <span class="identity-value">Dr. Totok Dewayanto, S.E., M.Si., Akt., CA</span>
+    </div>
+  </div>
+
+  <div class="identity-footer">
+    <p>PROGRAM STUDI S1 AKUNTANSI</p>
+    <p>FAKULTAS EKONOMIKA DAN BISNIS</p>
+    <p class="identity-univ">UNIVERSITAS DIPONEGORO</p>
+  </div>
+</section>
 ```text
 frontend/
   index.html
