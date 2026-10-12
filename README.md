@@ -16,7 +16,7 @@
 </p>
 
 <p align="center">
-  🔗 <a href="https://sulistiani.github.io/KlaimKu/"><b>▶ KLIK DI SINI UNTUK MEMBUKA SISTEM ◀</b></a>
+  🔗 <a href="https://sulistianisketch.github.io/reimbursement-app/"><b>▶ KLIK DI SINI UNTUK MEMBUKA SISTEM ◀</b></a>
 </p>
 
 ---
@@ -45,8 +45,8 @@ erDiagram
     DEPARTMENTS  ||--o{ EMPLOYEES      : "memiliki"
     DEPARTMENTS  ||--o{ REIMBURSEMENTS : "tempat pengajuan"
     EMPLOYEES    ||--o{ REIMBURSEMENTS : "mengajukan"
+    EMPLOYEES    ||--o{ REIMBURSEMENTS : "menyetujui"
     CATEGORIES   ||--o{ REIMBURSEMENTS : "mengkategorikan"
-    EMPLOYEES    ||--o{ REIMBURSEMENTS : "menyetujui (approver)"
 
     DEPARTMENTS {
         uuid    id_department PK
@@ -88,6 +88,65 @@ erDiagram
     }
 ```
 
+### 🎨 Diagram ERD (Versi Berwarna)
+
+> Diagram di bawah menggunakan **Mermaid** dengan **classDiagram** yang mendukung warna per entitas agar lebih mudah dibaca.
+
+```mermaid
+classDiagram
+    direction LR
+
+    class DEPARTMENTS {
+        🟦 +uuid id_department PK
+        +string nama_department
+        +string kode
+        +timestamp created_at
+    }
+
+    class EMPLOYEES {
+        🟩 +uuid id_employee PK
+        +uuid id_department FK
+        +string nama
+        +string email
+        +string role
+        +string jabatan
+        +timestamp created_at
+    }
+
+    class CATEGORIES {
+        🟨 +uuid id_category PK
+        +string nama_category
+        +numeric batas_maksimal
+        +string deskripsi
+        +timestamp created_at
+    }
+
+    class REIMBURSEMENTS {
+        🟥 +uuid id_reimbursement PK
+        +uuid id_employee FK
+        +uuid id_department FK
+        +uuid id_category FK
+        +uuid id_approver FK
+        +numeric jumlah
+        +date tanggal
+        +string status
+        +text alasan_penolakan
+        +text deskripsi
+        +timestamp created_at
+    }
+
+    DEPARTMENTS "1" --> "N" EMPLOYEES : memiliki
+    DEPARTMENTS "1" --> "N" REIMBURSEMENTS : tempat pengajuan
+    EMPLOYEES "1" --> "N" REIMBURSEMENTS : mengajukan
+    EMPLOYEES "1" --> "N" REIMBURSEMENTS : menyetujui
+    CATEGORIES "1" --> "N" REIMBURSEMENTS : mengkategorikan
+
+    style DEPARTMENTS fill:#4A90E2,stroke:#1F3A93,stroke-width:2px,color:#fff
+    style EMPLOYEES fill:#27AE60,stroke:#145A32,stroke-width:2px,color:#fff
+    style CATEGORIES fill:#F1C40F,stroke:#B7950B,stroke-width:2px,color:#000
+    style REIMBURSEMENTS fill:#E74C3C,stroke:#922B21,stroke-width:2px,color:#fff
+```
+
 ### 🔗 Relasi Antar Entitas
 
 | Relasi | Kardinalitas | Keterangan |
@@ -102,42 +161,42 @@ erDiagram
 
 ## 🧱 Struktur Tabel
 
-### 1. `departments`
+### 🏢 1. `departments`
 | Kolom | Tipe | Keterangan |
 |---|---|---|
-| id_department | uuid (PK) | Primary key |
+| 🔑 id_department | uuid (PK) | Primary key |
 | nama_department | text | Nama departemen/divisi |
 | kode | text | Kode singkat departemen |
 | created_at | timestamptz | Waktu data dibuat |
 
-### 2. `employees`
+### 👥 2. `employees`
 | Kolom | Tipe | Keterangan |
 |---|---|---|
-| id_employee | uuid (PK) | Primary key |
-| id_department | uuid (FK) | Referensi ke `departments` |
+| 🔑 id_employee | uuid (PK) | Primary key |
+| 🔗 id_department | uuid (FK) | Referensi ke `departments` |
 | nama | text | Nama karyawan |
 | email | text | Email login karyawan |
 | role | text | `karyawan` / `finance` / `admin` |
 | jabatan | text | Jabatan karyawan |
 | created_at | timestamptz | Waktu data dibuat |
 
-### 3. `categories`
+### 🏷️ 3. `categories`
 | Kolom | Tipe | Keterangan |
 |---|---|---|
-| id_category | uuid (PK) | Primary key |
+| 🔑 id_category | uuid (PK) | Primary key |
 | nama_category | text | Nama kategori reimbursement |
 | batas_maksimal | numeric | Batas maksimal nominal klaim |
 | deskripsi | text | Penjelasan kategori |
 | created_at | timestamptz | Waktu data dibuat |
 
-### 4. `reimbursements`
+### 🧾 4. `reimbursements`
 | Kolom | Tipe | Keterangan |
 |---|---|---|
-| id_reimbursement | uuid (PK) | Primary key |
-| id_employee | uuid (FK) | Referensi ke `employees` (pengaju) |
-| id_department | uuid (FK) | Referensi ke `departments` |
-| id_category | uuid (FK) | Referensi ke `categories` |
-| id_approver | uuid (FK) | Referensi ke `employees` (penyetuju) |
+| 🔑 id_reimbursement | uuid (PK) | Primary key |
+| 🔗 id_employee | uuid (FK) | Referensi ke `employees` (pengaju) |
+| 🔗 id_department | uuid (FK) | Referensi ke `departments` |
+| 🔗 id_category | uuid (FK) | Referensi ke `categories` |
+| 🔗 id_approver | uuid (FK) | Referensi ke `employees` (penyetuju) |
 | jumlah | numeric | Nominal yang diklaim |
 | tanggal | date | Tanggal pengajuan |
 | status | text | `pending` / `approved` / `rejected` |
