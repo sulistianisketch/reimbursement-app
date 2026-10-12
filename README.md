@@ -1,8 +1,3 @@
-# KlaimKu
-
-Sistem reimbursement perusahaan dengan dashboard, empat data master, frontend HTML/CSS/JavaScript, backend Node.js bawaan, dan database Supabase Postgres. Tidak membutuhkan `package.json`, framework, CDN, atau berkas environment.
-
-## Struktur
 <!-- ================= IDENTITAS MAHASISWA ================= -->
 <section class="identity-card" aria-label="Identitas Mahasiswa">
   <div class="identity-badge">
@@ -34,45 +29,126 @@ Sistem reimbursement perusahaan dengan dashboard, empat data master, frontend HT
     <p class="identity-univ">UNIVERSITAS DIPONEGORO</p>
   </div>
 </section>
-```text
-frontend/
-  index.html
-  styles.css
-  app.js
-backend/
-  app.js
-database/
-  schema.sql
-  bootstrap-admin.sql
-```
 
-Empat entitas database: `departments`, `employees`, `categories`, dan `reimbursements`.
+<!-- ================= ENTITY RELATIONSHIP DIAGRAM ================= -->
+<section class="erd-section" aria-label="Entity Relationship Diagram">
+  <div class="erd-header">
+    <h2 class="erd-title">Entity Relationship Diagram</h2>
+    <p class="erd-subtitle">
+      Struktur database sistem reimbursement <b>KlaimKu</b> — empat entitas utama dengan relasi one-to-many.
+    </p>
+  </div>
 
-Dokumentasi skema, kamus data, ERD, aturan RLS, dan alur reimbursement tersedia di [`docs/skema-sistem-reimbursement.md`](docs/skema-sistem-reimbursement.md).
+  <div class="erd-canvas">
 
-## Membuka aplikasi
+    <!-- DEPARTMENTS -->
+    <article class="erd-entity erd-entity-dept">
+      <header class="erd-entity-head">
+        <span class="erd-entity-icon">🏢</span>
+        <span class="erd-entity-name">departments</span>
+      </header>
+      <ul class="erd-entity-body">
+        <li><span class="erd-key erd-pk">PK</span> id <em>uuid</em></li>
+        <li>name <em>text</em></li>
+        <li>code <em>text</em></li>
+        <li>created_at <em>timestamptz</em></li>
+      </ul>
+    </article>
 
-- Buka `frontend/index.html` langsung di browser untuk mencoba mode demo. Data demo disimpan di local storage browser.
-- Untuk menjalankan server opsional, gunakan Node.js 18 atau lebih baru: `node backend/app.js`, lalu buka `http://localhost:4173`.
-- Endpoint pemeriksaan server: `http://localhost:4173/api/health`.
+    <!-- EMPLOYEES -->
+    <article class="erd-entity erd-entity-emp">
+      <header class="erd-entity-head">
+        <span class="erd-entity-icon">👤</span>
+        <span class="erd-entity-name">employees</span>
+      </header>
+      <ul class="erd-entity-body">
+        <li><span class="erd-key erd-pk">PK</span> id <em>uuid</em></li>
+        <li><span class="erd-key erd-fk">FK</span> department_id <em>uuid</em></li>
+        <li>full_name <em>text</em></li>
+        <li>email <em>text</em></li>
+        <li>role <em>text</em></li>
+        <li>position <em>text</em></li>
+        <li>is_active <em>boolean</em></li>
+        <li>created_at <em>timestamptz</em></li>
+      </ul>
+    </article>
 
-## Menyiapkan Supabase
+    <!-- CATEGORIES -->
+    <article class="erd-entity erd-entity-cat">
+      <header class="erd-entity-head">
+        <span class="erd-entity-icon">🏷️</span>
+        <span class="erd-entity-name">categories</span>
+      </header>
+      <ul class="erd-entity-body">
+        <li><span class="erd-key erd-pk">PK</span> id <em>uuid</em></li>
+        <li>name <em>text</em></li>
+        <li>limit_amount <em>numeric</em></li>
+        <li>description <em>text</em></li>
+        <li>created_at <em>timestamptz</em></li>
+      </ul>
+    </article>
 
-1. Buat project Supabase.
-2. Buka SQL Editor, lalu jalankan seluruh isi `database/schema.sql`.
-3. Buka aplikasi, klik **Supabase terhubung** di kiri bawah, lalu isi Project URL dan publishable key. `anon` key lama juga didukung. Jangan masukkan secret key atau `service_role` key ke frontend.
-4. Pada Supabase Authentication, sesuaikan URL configuration untuk alamat tempat aplikasi akan dibuka. Pastikan aturan email confirmation sesuai kebutuhan perusahaan.
-5. Buat akun dan login ke KlaimKu menggunakan email yang akan dijadikan admin.
-6. Buka `database/bootstrap-admin.sql`, ganti `GANTI_DENGAN_EMAIL_LOGIN_ANDA` dengan email login Anda, lalu jalankan seluruh skrip di SQL Editor. Skrip ini menambahkan departemen dan kategori awal serta menautkan akun menjadi admin.
+    <!-- REIMBURSEMENTS -->
+    <article class="erd-entity erd-entity-reim">
+      <header class="erd-entity-head">
+        <span class="erd-entity-icon">🧾</span>
+        <span class="erd-entity-name">reimbursements</span>
+      </header>
+      <ul class="erd-entity-body">
+        <li><span class="erd-key erd-pk">PK</span> id <em>uuid</em></li>
+        <li><span class="erd-key erd-fk">FK</span> employee_id <em>uuid</em></li>
+        <li><span class="erd-key erd-fk">FK</span> category_id <em>uuid</em></li>
+        <li><span class="erd-key erd-fk">FK</span> approved_by <em>uuid</em></li>
+        <li>code <em>text</em></li>
+        <li>expense_date <em>date</em></li>
+        <li>amount <em>numeric</em></li>
+        <li>description <em>text</em></li>
+        <li>status <em>text</em></li>
+        <li>reject_reason <em>text</em></li>
+        <li>approved_at <em>timestamptz</em></li>
+        <li>created_at <em>timestamptz</em></li>
+      </ul>
+    </article>
 
-7. Muat ulang KlaimKu. Admin dapat mengelola data master dan menyetujui pengajuan. Hak akses database tetap diperiksa dengan Row Level Security; publishable key bukan pengganti autentikasi.
+  </div>
 
-Jika Finance/Admin tidak dapat membuat pengajuan untuk karyawan lain, jalankan `database/fix-reimbursement-insert-policy.sql` di SQL Editor lalu muat ulang aplikasi.
+  <div class="erd-legend">
+    <span class="erd-legend-item"><b class="erd-pk">PK</b> Primary Key</span>
+    <span class="erd-legend-item"><b class="erd-fk">FK</b> Foreign Key</span>
+    <span class="erd-legend-item"><b class="erd-rel">1 ─ ∞</b> One to Many</span>
+  </div>
 
-## Fitur
-
-- Dashboard ringkasan, tren bulanan, kategori teratas, dan pengajuan terbaru.
-- Master karyawan, departemen, dan kategori dengan tambah, ubah, hapus, dan pencarian.
-- Pengajuan reimbursement, validasi batas kategori, detail, persetujuan, dan penolakan dengan alasan.
-- Peran karyawan, finance, dan admin, beserta kebijakan RLS pada empat tabel.
-- Layout responsif, navigasi mobile, ilustrasi uang SVG, dan animasi yang menghormati pengaturan reduced motion.
+  <div class="erd-relations-table">
+    <table>
+      <thead>
+        <tr>
+          <th>Relasi</th>
+          <th>Kardinalitas</th>
+          <th>Keterangan</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><code>departments</code> → <code>employees</code></td>
+          <td>1 : N</td>
+          <td>Satu departemen memiliki banyak karyawan</td>
+        </tr>
+        <tr>
+          <td><code>employees</code> → <code>reimbursements</code></td>
+          <td>1 : N</td>
+          <td>Satu karyawan dapat mengajukan banyak reimbursement</td>
+        </tr>
+        <tr>
+          <td><code>categories</code> → <code>reimbursements</code></td>
+          <td>1 : N</td>
+          <td>Satu kategori dipakai di banyak pengajuan</td>
+        </tr>
+        <tr>
+          <td><code>employees</code> → <code>reimbursements.approved_by</code></td>
+          <td>1 : N</td>
+          <td>Satu approver menyetujui banyak pengajuan</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>
